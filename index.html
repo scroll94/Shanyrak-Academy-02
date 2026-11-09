@@ -161,7 +161,7 @@ h1, h2, h3 { text-wrap: balance; }
   width: min(50vh, 32vw); translate: -50% -50%;
   color: var(--gold); opacity: .9;
 }
-.hero.has-3d .hero-fallback { display: none; }
+.hero.has-3d .hero-fallback { visibility: hidden; } /* не display: none — по этому блоку 3D-сцена узнаёт место и размер шаңырака */
 .hero-in { width: 100%; max-width: 1240px; margin-inline: auto; padding: 120px var(--gutter-r) 90px var(--gutter-l); }
 .hero-copy { max-width: 40rem; }
 /* плашка под текстом: тёмное стекло, чтобы буквы не спорили с лучами, 3D и узорами */
@@ -187,12 +187,33 @@ h1, h2, h3 { text-wrap: balance; }
 @keyframes hint { 0% { transform: translateY(0); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(52px); opacity: 0; } }
 
 @media (max-width: 1023px), (max-aspect-ratio: 19/20) {
-  .hero { align-items: flex-end; min-height: 0; background:
-    radial-gradient(ellipse 80% 34% at 50% 26%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
+  /* --orb — радиус шаңырака. Он как можно крупнее, но уступает место тексту:
+     заголовок и кнопка записи должны помещаться на первом экране телефона без прокрутки. */
+  .hero { --orb: min(42vw, 170px); align-items: flex-end; min-height: 0; background:
+    radial-gradient(ellipse 80% calc(var(--orb) * 1.7) at 50% calc(78px + var(--orb)), color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
     var(--night); }
-  .hero-in { padding-top: calc(72px + 2 * min(42vw, 170px) + 40px); padding-bottom: 64px; }
-  .hero-fallback { left: 50%; top: calc(86px + min(42vw, 170px)); width: calc(2 * min(42vw, 170px)); }
+  @supports (height: 1svh) { .hero { --orb: clamp(92px, calc((100svh - 338px) / 2), min(42vw, 170px)); } }
+  .hero-in { padding-top: calc(72px + 2 * var(--orb) + 14px); padding-bottom: 56px; }
+  .hero-fallback { left: 50%; top: calc(78px + var(--orb)); width: calc(2 * var(--orb)); }
   .hero-hint { display: none; }
+}
+@media (max-width: 480px) {
+  /* на телефоне заголовок в две строки, кнопка во всю ширину плашки и в одну строку */
+  .hero h1 { font-size: clamp(1.4rem, 7.2vw, 2.05rem); }
+  .hero .lead { margin: 1rem 0 1.15rem; font-size: 1rem; }
+  .hero .cta-row .btn { width: 100%; min-height: 50px; padding: 0 .75rem; font-size: .9rem; }
+}
+@media (max-width: 350px) { .hero .cta-row .btn svg { display: none; } .hero .cta-row .btn { font-size: .84rem; } }
+/* телефон боком: шаңырақ справа от текста, иначе кнопка уходит под экран */
+@media (max-height: 520px) and (min-width: 600px) and (max-width: 1023px) {
+  .hero { --orb: min(36svh, 17vw); align-items: center; min-height: max(100svh, 330px); background:
+    radial-gradient(ellipse 34% 70% at 78% 56%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
+    var(--night); }
+  .hero-in { padding-top: 84px; padding-bottom: 20px; }
+  .hero-copy.read-panel { max-width: 56%; }
+  .hero-fallback { left: 78%; top: calc(50% + 30px); }
+  .hero h1 { font-size: clamp(1.5rem, 3.6vw, 2.2rem); }
+  .hero .lead { margin: .8rem 0 1rem; font-size: 1rem; }
 }
 
 /* ---------- Басқұр: орнаментальная лента ---------- */
@@ -1594,7 +1615,11 @@ h1, h2, h3 { text-wrap: balance; }
   const heroRest = gsap.from('.hero [data-in]', { y: 24, opacity: 0, duration: 1, ease: 'power3.out', stagger: 0.08, delay: 0.4 });
   // Если кадры не идут (вкладка в фоне), текст героя всё равно должен появиться
   setTimeout(() => { if (heroAnim) heroAnim.progress(1); heroRest.progress(1); }, 2800);
-  gsap.to('.hero-copy', { y: -70, opacity: 0.25, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  // На широком экране текст героя уходит вверх и гаснет. На телефоне нет: там кнопка записи
+  // оказывается в середине экрана как раз после небольшой прокрутки и не должна выглядеть выключенной.
+  gsap.matchMedia().add('(min-width: 1024px) and (min-aspect-ratio: 19/20)', () => {
+    gsap.to('.hero-copy', { y: -70, opacity: 0.25, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+  });
 
   // ---------- Анимации появления при прокрутке ----------
   // Пока посетитель не начал листать, страница целиком видна в готовом виде.
@@ -1680,6 +1705,7 @@ h1, h2, h3 { text-wrap: balance; }
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.186.0/build/three.module.js';
 
 const hero = document.querySelector('.hero');
+const fallback = hero.querySelector('.hero-fallback');
 const canvas = document.getElementById('sky');
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const stacked = matchMedia('(max-width: 1023px), (max-aspect-ratio: 19/20)');
@@ -1853,8 +1879,13 @@ function init() {
     camera.updateProjectionMatrix();
     const wpp = (2 * 10 * Math.tan(THREE.MathUtils.degToRad(camera.fov / 2))) / h;
     let cx, cy, rpx;
-    if (stacked.matches) { rpx = Math.min(w * 0.42, 170); cx = w / 2; cy = 86 + rpx; }
-    else {
+    if (stacked.matches) {
+      // место и размер задаёт CSS (переменная --orb): читаем их с блока запасного логотипа
+      const slot = fallback.getBoundingClientRect(), box = hero.getBoundingClientRect();
+      rpx = slot.width / 2 || Math.min(w * 0.42, 170);
+      cx = slot.width ? slot.left - box.left + slot.width / 2 : w / 2;
+      cy = slot.width ? slot.top - box.top + slot.height / 2 : 78 + rpx;
+    } else {
       const textRight = copy.getBoundingClientRect().right - hero.getBoundingClientRect().left + 24;
       const room = w - textRight;
       rpx = Math.min(h * 0.38, room / 2 - 12);
