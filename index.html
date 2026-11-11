@@ -216,7 +216,7 @@ h1, h2, h3 { text-wrap: balance; }
   .hero { --orb: min(42vw, 170px); align-items: flex-end; min-height: 0; background:
     radial-gradient(ellipse 80% calc(var(--orb) * 1.7) at 50% calc(78px + var(--orb)), color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
     var(--night); }
-  @supports (height: 1svh) { .hero { --orb: clamp(92px, calc((100svh - 338px) / 2), min(42vw, 170px)); } }
+  @supports (height: 1svh) { .hero { --orb: clamp(92px, calc((100svh - 392px) / 2), min(42vw, 170px)); } }
   .hero-in { padding-top: calc(72px + 2 * var(--orb) + 14px); padding-bottom: 56px; }
   .hero-fallback { left: 50%; top: calc(78px + var(--orb)); width: calc(2 * var(--orb)); }
   .hero-hint { display: none; }
@@ -225,7 +225,9 @@ h1, h2, h3 { text-wrap: balance; }
   /* на телефоне заголовок в две строки, кнопка во всю ширину плашки и в одну строку */
   .hero h1 { font-size: clamp(1.4rem, 7.2vw, 2.05rem); }
   .hero .lead { margin: 1rem 0 1.15rem; font-size: 1rem; }
+  .hero .cta-row { gap: .5rem; }
   .hero .cta-row .btn { width: 100%; min-height: 50px; padding: 0 .75rem; font-size: .9rem; }
+  .hero .cta-row .hero-try { min-height: 44px; }
 }
 @media (max-width: 350px) { .hero .cta-row .btn svg { display: none; } .hero .cta-row .btn { font-size: .84rem; } }
 /* телефон боком: шаңырақ справа от текста, иначе кнопка уходит под экран */
@@ -735,7 +737,7 @@ h1, h2, h3 { text-wrap: balance; }
         <a class="btn btn-gold" href="#join" data-magnet>Записаться на бесплатный урок
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-
+        <a class="btn btn-ghost hero-try" href="#try">Попробовать мини-урок</a>
       </div>
     </div>
   </div>
