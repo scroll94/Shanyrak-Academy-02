@@ -65,6 +65,8 @@
 [hidden] { display: none !important; }
 html { scroll-behavior: smooth; scroll-padding-top: 84px; overflow-x: hidden; }
 html.lenis, html.lenis body { height: auto; }
+/* со своей плавной прокруткой CSS-плавность выключаем: иначе пересчёт позиций анимаций меряет страницу «на ходу» и закреплённая юрта встаёт не на место */
+html.lenis { scroll-behavior: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-stopped { overflow: hidden; }
 body {
@@ -362,25 +364,8 @@ h1, h2, h3 { text-wrap: balance; }
 .dir-visual--video video { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* подписи в карточках и под ними */
 .dir-sub { margin: .4rem 0 -.3rem; font: 600 .7rem/1 var(--font-display); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
-.tc-title { margin: 3.4rem 0 0; font: 700 clamp(1.15rem, 2vw, 1.5rem)/1.2 var(--font-display); }
 .trial-title { margin: 1.6rem 0 0; font-weight: 600; color: var(--milk); }
 .trial-title + .trial { margin-top: .7rem; }
-/* мини-консоль: имя → вывод программы */
-.try-code { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); gap: 14px; max-width: 880px; margin-top: 1rem; }
-.tc-ed, .tc-out { padding: 0 0 1rem; border-radius: 16px; background: #0a1430; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--milk) 10%, transparent); overflow: hidden; font: 500 .98rem/1.7 Consolas, "Cascadia Mono", monospace; }
-.tc-top { display: flex; align-items: center; gap: 6px; margin: 0 0 .5rem; padding: .6rem 1rem; background: color-mix(in srgb, var(--milk) 5%, transparent); color: var(--muted); font: 500 .8rem/1 var(--font-body); }
-.tc-top i { width: 9px; height: 9px; border-radius: 50%; background: #ff6b5e; }
-.tc-top i:nth-child(2) { background: #f6c34d; } .tc-top i:nth-child(3) { background: #45c46d; }
-.tc-top span { margin-left: 6px; }
-.tc-line { display: flex; gap: 1rem; margin: 0; padding: 0 1rem; white-space: nowrap; overflow: hidden; }
-.tc-n { width: 1ch; color: color-mix(in srgb, var(--milk) 30%, transparent); }
-.k-v { color: var(--milk); } .k-s { color: #7fe3ad; } .k-f { color: var(--gold); }
-.tc-line input { width: 9ch; min-width: 0; padding: 0 .2rem; border: 0; border-bottom: 2px dashed var(--gold); background: color-mix(in srgb, var(--gold) 10%, transparent); color: #7fe3ad; font: inherit; outline: none; caret-color: var(--gold); }
-.tc-line input:focus { background: color-mix(in srgb, var(--gold) 18%, transparent); border-bottom-style: solid; }
-.tc-out pre { min-height: 5.1em; margin: 0; padding: 0 1rem; color: var(--milk); font: inherit; white-space: pre-wrap; }
-.tc-out pre b { color: var(--gold); font-weight: 600; }
-.tc-hint { margin: .6rem 1rem 0; color: var(--muted); font: 400 .86rem/1.4 var(--font-body); }
-@media (max-width: 760px) { .try-code { grid-template-columns: minmax(0, 1fr); } .tc-ed, .tc-out { font-size: .9rem; } }
 
 /* интерактив в живых сценах */
 .dir[data-id="code"] .dir-visual--live { cursor: pointer; }
@@ -631,6 +616,115 @@ h1, h2, h3 { text-wrap: balance; }
 .kin-track span.o { color: color-mix(in srgb, var(--night-2) 60%, var(--night)); -webkit-text-stroke: 3px var(--gold); paint-order: stroke fill; }
 .kin-track span.g { color: var(--gold); }
 .kin-track svg { flex: none; width: clamp(34px, 5vw, 72px); height: auto; color: var(--felt); }
+
+/* ---------- Мини-уроки: бот, парабола, игра ---------- */
+.lab { background: radial-gradient(ellipse 55% 45% at 82% 30%, color-mix(in srgb, var(--sky) 7%, transparent), transparent 72%); }
+.lab .sec-head { max-width: 40rem; width: fit-content; }
+.lab-box { margin-top: 2.4rem; --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+.lab-tabs { display: inline-flex; gap: 4px; max-width: 100%; padding: 4px; border-radius: 999px; background: color-mix(in srgb, var(--night-2) 85%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--milk) 12%, transparent); }
+.lab-tabs button { min-height: 44px; padding: 0 1.25rem; border: 0; border-radius: 999px; background: none; color: var(--muted); font: 600 .95rem/1 var(--font-body); white-space: nowrap; cursor: pointer; transition: background-color .25s, color .25s; }
+.lab-tabs button:hover { color: var(--milk); }
+.lab-tabs button[aria-selected="true"] { background: var(--accent); color: var(--night); }
+.lab-tabs button:focus-visible { outline: 2px solid var(--milk); outline-offset: 2px; }
+
+.lab-pane { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin-top: 14px; }
+.lab-ed, .lab-out { position: relative; min-width: 0; border-radius: 16px; background: var(--night); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--milk) 10%, transparent); overflow: hidden; }
+.lab-ed { display: flex; flex-direction: column; }
+.lab-top { display: flex; align-items: center; gap: 6px; margin: 0; padding: .6rem 1rem; background: color-mix(in srgb, var(--milk) 5%, transparent); color: var(--muted); font: 500 .8rem/1 var(--font-body); }
+.lab-top i { width: 9px; height: 9px; border-radius: 50%; background: #ff6b5e; }
+.lab-top i:nth-child(2) { background: #f6c34d; }
+.lab-top i:nth-child(3) { background: #45c46d; }
+.lab-top span { margin-left: 6px; }
+.lab-code { padding: .7rem 0 .5rem; overflow-x: auto; color: var(--milk); font: 500 .95rem/1.75 var(--mono); }
+.lab-line { display: flex; gap: 1rem; margin: 0; padding: 0 1rem; white-space: pre; }
+.lab-line .ln { flex: none; width: 1ch; color: color-mix(in srgb, var(--milk) 30%, transparent); user-select: none; }
+.k-s { color: #7fe3ad; }
+.k-f { color: var(--gold); }
+.k-k { color: color-mix(in srgb, var(--felt) 65%, var(--milk)); }
+.k-n { color: var(--sky); font-variant-numeric: tabular-nums; }
+.k-c { color: color-mix(in srgb, var(--milk) 42%, transparent); }
+/* поля прямо в коде; 16px, чтобы iPhone не увеличивал страницу при вводе */
+.lab-line input { width: 12ch; min-width: 0; padding: 0 .2rem; border: 0; border-bottom: 2px dashed var(--gold); border-radius: 0; background: color-mix(in srgb, var(--gold) 10%, transparent); color: #7fe3ad; font: inherit; font-size: max(16px, 1em); outline: none; caret-color: var(--gold); }
+.lab-line input:focus { background: color-mix(in srgb, var(--gold) 20%, transparent); border-bottom-style: solid; }
+.lab-hint { margin: auto 0 0; padding: .7rem 1rem .95rem; color: var(--muted); font-size: .86rem; line-height: 1.45; }
+.lab-hint b { color: var(--milk); font: 600 .95em/1 var(--mono); white-space: nowrap; }
+
+.lab-formula { display: grid; gap: .35rem; margin: 0; padding: 1.1rem 1rem .5rem; color: var(--milk); font: 600 clamp(1.15rem, 2.1vw, 1.5rem)/1.2 var(--mono); }
+.lab-formula small { color: var(--muted); font: 500 .86rem/1.3 var(--font-body); }
+.lab-params { display: grid; gap: .1rem; padding: .3rem 1rem .5rem; }
+.lab-params label { display: grid; grid-template-columns: 5.4em minmax(0, 1fr) 2.8em; align-items: center; gap: .8rem; min-height: 44px; color: var(--muted); font-size: .9rem; }
+.lab-params label b { margin-right: .35rem; color: var(--accent); font: 700 1.05rem/1 var(--mono); }
+.lab-params output { text-align: right; color: var(--milk); font: 600 .95rem/1 var(--mono); font-variant-numeric: tabular-nums; }
+.lab-code--params { display: grid; gap: .1rem; overflow: visible; }
+.lab-param { display: grid; }
+.lab-param input { width: auto; margin: 0 1rem 0 calc(2rem + 1ch); }
+.lab input[type="range"] { -webkit-appearance: none; appearance: none; height: 32px; margin-block: 0; background: none; cursor: pointer; }
+.lab-params input[type="range"] { width: 100%; margin: 0; }
+.lab input[type="range"]::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--milk) 20%, transparent); }
+.lab input[type="range"]::-moz-range-track { height: 4px; border-radius: 2px; background: color-mix(in srgb, var(--milk) 20%, transparent); }
+.lab input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 22px; height: 22px; margin-top: -9px; border: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+.lab input[type="range"]::-moz-range-thumb { width: 22px; height: 22px; border: 0; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 22%, transparent); }
+.lab input[type="range"]:focus-visible { outline: 2px solid var(--milk); outline-offset: 2px; border-radius: 6px; }
+
+.lab-stage { min-height: 330px; background: linear-gradient(180deg, var(--night-2), var(--night) 78%); }
+.lab-stage canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.lab-badge { position: absolute; left: 12px; top: 12px; padding: .42rem .75rem; border-radius: 999px; background: rgb(10 20 48 / .8); color: var(--milk); font: 600 .78rem/1 var(--font-body); pointer-events: none; }
+.lab-game canvas { touch-action: manipulation; cursor: pointer; }
+.gm-hud { position: absolute; left: 14px; top: 13px; display: flex; gap: 1.1rem; margin: 0; color: var(--muted); font: 700 .66rem/1 var(--font-display); letter-spacing: .14em; pointer-events: none; }
+.gm-hud b { margin-left: .3rem; color: var(--milk); font-variant-numeric: tabular-nums; }
+.gm-start { position: absolute; left: 50%; top: 46%; translate: -50% -50%; display: inline-flex; align-items: center; gap: .5rem; min-height: 52px; padding: 0 1.6rem 0 1.25rem; border: 0; border-radius: 999px; background: var(--accent); color: var(--night); font: 700 1rem/1 var(--font-display); cursor: pointer; box-shadow: 0 14px 36px -10px color-mix(in srgb, var(--accent) 85%, transparent); transition: transform .16s var(--ease-out); }
+.gm-start svg { width: 20px; height: 20px; }
+.gm-start:active { transform: scale(.96); }
+.gm-start:focus-visible { outline: 2px solid var(--milk); outline-offset: 3px; }
+.gm-tip { position: absolute; left: 12px; right: 12px; top: calc(46% + 38px); margin: 0; text-align: center; color: var(--milk); font-size: .84rem; line-height: 1.35; text-shadow: 0 1px 8px var(--night); pointer-events: none; transition: opacity .3s; }
+.lab-game.is-run .gm-tip { opacity: 0; }
+
+.lab-chat { display: flex; flex-direction: column; min-height: 330px; }
+.chat-head { display: flex; align-items: center; gap: .7rem; margin: 0; padding: .65rem 1rem; border-bottom: 1px solid color-mix(in srgb, var(--milk) 10%, transparent); }
+.chat-ava { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--accent); color: var(--night); font: 700 .9rem/1 var(--font-display); }
+.chat-head span { display: grid; gap: .22rem; min-width: 0; }
+.chat-head span b { overflow: hidden; color: var(--milk); font: 600 .95rem/1.15 var(--font-body); text-overflow: ellipsis; white-space: nowrap; }
+.chat-head small { color: var(--ok); font-size: .74rem; line-height: 1; }
+.chat-log { flex: 1 1 0; display: flex; flex-direction: column; gap: .45rem; min-height: 150px; padding: .9rem 1rem; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--milk) 25%, transparent) transparent; }
+.chat-log:focus-visible { outline: 2px solid var(--sky); outline-offset: -2px; }
+.chat-msg { max-width: 86%; margin: 0; padding: .5rem .8rem; border-radius: 14px; font-size: .93rem; line-height: 1.4; overflow-wrap: anywhere; animation: chat-in .28s var(--ease-out); }
+.chat-msg.is-bot { align-self: flex-start; border-bottom-left-radius: 4px; background: color-mix(in srgb, var(--milk) 9%, var(--night)); }
+.chat-msg.is-me { align-self: flex-end; border-bottom-right-radius: 4px; background: color-mix(in srgb, var(--accent) 30%, var(--night)); }
+.chat-msg.is-typing { display: inline-flex; gap: 4px; padding: .72rem .8rem; }
+.chat-msg.is-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: chat-dot 1s infinite; }
+.chat-msg.is-typing i:nth-child(2) { animation-delay: .15s; }
+.chat-msg.is-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes chat-in { from { opacity: 0; transform: translateY(8px); } }
+@keyframes chat-dot { 50% { transform: translateY(-3px); opacity: .5; } }
+.chat-chips { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0 1rem .65rem; }
+.chat-chips button { min-height: 36px; padding: 0 .85rem; border: 0; border-radius: 999px; background: none; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent); color: color-mix(in srgb, var(--accent) 60%, var(--milk)); font: 500 .86rem/1 var(--font-body); cursor: pointer; transition: background-color .2s, color .2s; }
+.chat-chips button:hover { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--milk); }
+.chat-form { display: flex; gap: .5rem; padding: .6rem; border-top: 1px solid color-mix(in srgb, var(--milk) 10%, transparent); }
+.chat-form input { flex: 1; min-width: 0; min-height: 44px; padding: 0 1rem; border: 1px solid color-mix(in srgb, var(--milk) 16%, transparent); border-radius: 999px; background: color-mix(in srgb, var(--night-2) 70%, transparent); color: var(--milk); font: 400 16px var(--font-body); transition: border-color .25s, box-shadow .25s; }
+.chat-form input::placeholder { color: color-mix(in srgb, var(--muted) 70%, transparent); }
+.chat-form input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); }
+.chat-form button { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border: 0; border-radius: 50%; background: var(--accent); color: var(--night); cursor: pointer; transition: transform .16s var(--ease-out); }
+.chat-form button svg { width: 20px; height: 20px; }
+.chat-form button:active { transform: scale(.94); }
+
+.lab-foot { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: .8rem 1rem; padding: .9rem 1rem .9rem 1.25rem; border-radius: 16px; background: color-mix(in srgb, var(--accent) 8%, var(--night)); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 28%, transparent); }
+.lab-task { flex: 1 1 16rem; display: grid; gap: .3rem; margin: 0; color: var(--milk); font-size: .96rem; line-height: 1.4; }
+.lab-task b { color: var(--accent); font: 600 .66rem/1 var(--font-display); letter-spacing: .15em; text-transform: uppercase; }
+.lab-task.is-done b { color: var(--ok); }
+.lab-foot .btn { min-height: 46px; padding: 0 1.3rem; font-size: .95rem; }
+@media (max-width: 860px) {
+  .lab-pane { grid-template-columns: minmax(0, 1fr); }
+  /* на телефоне график и игра стоят над ползунками: видно, что меняется */
+  .lab-stage { order: -1; min-height: 0; height: clamp(210px, 36svh, 300px); }
+  .lab-tabs { display: flex; }
+  .lab-tabs button { flex: 1; padding: 0 .5rem; }
+  .lab-code { font-size: .86rem; }
+  .lab-chat { min-height: 0; }
+  .chat-log { flex: none; height: 190px; }
+  .lab-foot { padding: .9rem 1rem; }
+  .lab-foot .btn { flex: 1 1 100%; }
+}
+/* ---------- конец мини-уроков ---------- */
 
 /* ---------- Киіз үй: 3D-юрта ---------- */
 .yurt { position: relative; }
@@ -930,6 +1024,7 @@ h1, h2, h3 { text-wrap: balance; }
     <nav class="nav-menu" aria-label="Разделы страницы">
       <ul class="nav-links">
         <li><a href="#directions">Направления</a></li>
+        <li><a href="#try">Мини-уроки</a></li>
         <li><a href="#yurt">3D-юрта</a></li>
         <li><a href="#join">Запись</a></li>
       </ul>
@@ -1024,23 +1119,105 @@ h1, h2, h3 { text-wrap: balance; }
         </div>
       </article>
     </div>
-    <h3 class="tc-title">Попробуй сам: первая строчка кода</h3>
-    <div class="try-code" data-reveal="up">
-      <div class="tc-ed">
-        <p class="tc-top"><i></i><i></i><i></i><span>hello.py</span></p>
-        <label class="tc-line"><span class="tc-n">1</span><span><span class="k-v">name</span> = <span class="k-s">"</span><input id="tc-name" type="text" maxlength="18" autocomplete="off" spellcheck="false" placeholder="твоё имя" aria-label="Напиши своё имя"><span class="k-s">"</span></span></label>
-        <p class="tc-line"><span class="tc-n">2</span><span><span class="k-f">print</span>(<span class="k-s">f"Сәлем, {name}!"</span>)</span></p>
-        <p class="tc-line"><span class="tc-n">3</span><span><span class="k-f">print</span>(<span class="k-s">"Букв:"</span>, <span class="k-f">len</span>(name))</span></p>
-        <p class="tc-line"><span class="tc-n">4</span><span><span class="k-f">print</span>(name[::-1])</span></p>
+  </div>
+</section>
+
+<!-- ===== Мини-уроки: начало ===== -->
+<section class="sec lab" id="try" aria-labelledby="lab-title">
+  <div class="wrap">
+    <header class="sec-head read-panel">
+      <h2 id="lab-title" data-reveal="lines">Попробуй прямо сейчас</h2>
+      <p class="sec-lead" data-reveal="up">Три мини-урока по минуте. Меняй код и смотри, что получится.</p>
+    </header>
+
+    <div class="lab-box" data-reveal="up">
+      <div class="lab-tabs" role="tablist" aria-label="Мини-уроки">
+        <button type="button" role="tab" id="lab-t-code" aria-controls="lab-p-code" aria-selected="true" style="--accent: var(--gold)">Код</button>
+        <button type="button" role="tab" id="lab-t-math" aria-controls="lab-p-math" aria-selected="false" tabindex="-1" style="--accent: var(--sky)">Математика</button>
+        <button type="button" role="tab" id="lab-t-game" aria-controls="lab-p-game" aria-selected="false" tabindex="-1" style="--accent: var(--felt)">Игра</button>
       </div>
-      <div class="tc-out" aria-live="polite">
-        <p class="tc-top"><span>вывод программы</span></p>
-        <pre id="tc-out"></pre>
-        <p class="tc-hint">Впиши имя: это настоящий Python.</p>
+
+      <!-- Код: чат-бот, которого учишь отвечать -->
+      <div class="lab-pane" id="lab-p-code" role="tabpanel" aria-labelledby="lab-t-code" style="--accent: var(--gold)">
+        <div class="lab-ed">
+          <p class="lab-top"><i></i><i></i><i></i><span>bot.py</span></p>
+          <div class="lab-code">
+            <label class="lab-line"><span class="ln">1</span><span>name = <span class="k-s">"</span><input id="bot-name" type="text" value="Шаңырақ-бот" maxlength="18" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Имя бота"><span class="k-s">"</span></span></label>
+            <label class="lab-line"><span class="ln">2</span><span>hello = <span class="k-s">"</span><input id="bot-hello" type="text" value="Сәлем! Чем помочь?" maxlength="32" autocomplete="off" spellcheck="false" aria-label="Приветствие бота"><span class="k-s">"</span></span></label>
+            <p class="lab-line"><span class="ln">3</span><span> </span></p>
+            <p class="lab-line"><span class="ln">4</span><span><span class="k-k">def</span> <span class="k-f">answer</span>(text):</span></p>
+            <p class="lab-line"><span class="ln">5</span><span>    <span class="k-k">if</span> <span class="k-s">"привет"</span> <span class="k-k">in</span> text:</span></p>
+            <p class="lab-line"><span class="ln">6</span><span>        <span class="k-k">return</span> hello</span></p>
+            <p class="lab-line"><span class="ln">7</span><span>    <span class="k-k">if</span> is_math(text):</span></p>
+            <p class="lab-line"><span class="ln">8</span><span>        <span class="k-k">return</span> calc(text)</span></p>
+            <p class="lab-line"><span class="ln">9</span><span>    <span class="k-k">return</span> <span class="k-s">"Я пока учусь"</span></span></p>
+          </div>
+          <p class="lab-hint">Так выглядит код бота на Python. Измени имя и приветствие: бот станет твоим.</p>
+        </div>
+        <div class="lab-out lab-chat">
+          <p class="chat-head"><b class="chat-ava" id="chat-ava" aria-hidden="true">Ш</b><span><b id="chat-name">Шаңырақ-бот</b><small>бот · онлайн</small></span></p>
+          <div class="chat-log" id="chat-log" role="log" aria-live="polite" aria-label="Переписка с ботом" tabindex="0"></div>
+          <div class="chat-chips" id="chat-chips" aria-label="Быстрые сообщения"><button type="button">привет</button><button type="button">2 + 2 * 2</button><button type="button">(15 − 3) / 4</button></div>
+          <form class="chat-form" id="chat-form" autocomplete="off">
+            <input id="chat-in" type="text" maxlength="60" enterkeyhint="send" placeholder="Напиши боту…" aria-label="Сообщение боту">
+            <button type="submit" aria-label="Отправить сообщение"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12l15-7-5 15-3-6z" fill="currentColor"/></svg></button>
+          </form>
+        </div>
+        <div class="lab-foot">
+          <p class="lab-task" id="code-task"><b>Задание</b><span>Измени приветствие в коде и напиши боту «привет».</span></p>
+          <a class="btn btn-gold" href="#join" data-pick="Программирование и ИИ">Хочу на такой урок</a>
+        </div>
+      </div>
+
+      <!-- Математика: парабола через звёзды -->
+      <div class="lab-pane" id="lab-p-math" role="tabpanel" aria-labelledby="lab-t-math" style="--accent: var(--sky)" hidden>
+        <div class="lab-ed">
+          <p class="lab-top"><i></i><i></i><i></i><span>парабола</span></p>
+          <p class="lab-formula"><span id="m-main">y = x²</span><small id="m-exp">вершина в точке (0; 0)</small></p>
+          <div class="lab-params">
+            <label><span><b>a</b> ширина</span><input id="m-a" type="range" min="-2" max="2" step="0.25" value="1"><output id="m-a-o" for="m-a">1</output></label>
+            <label><span><b>p</b> вбок</span><input id="m-p" type="range" min="-4" max="4" step="0.5" value="0"><output id="m-p-o" for="m-p">0</output></label>
+            <label><span><b>q</b> вверх</span><input id="m-q" type="range" min="-4" max="4" step="0.5" value="0"><output id="m-q-o" for="m-q">0</output></label>
+          </div>
+          <p class="lab-hint">Формула <b>y = a·(x − p)² + q</b>: каждая буква двигает график по-своему.</p>
+        </div>
+        <div class="lab-out lab-stage">
+          <canvas id="m-cv" role="img" aria-label="График параболы и звёзды, через которые она должна пройти"></canvas>
+          <span class="lab-badge" id="m-level">Задача 1 из 3</span>
+        </div>
+        <div class="lab-foot">
+          <p class="lab-task" id="math-task"><b>Задание</b><span>Двигай ползунки, чтобы парабола прошла через все звёзды.</span></p>
+          <button type="button" class="btn btn-ghost" id="m-next" hidden>Следующая задача</button>
+          <a class="btn btn-gold" href="#join" data-pick="Математика">Хочу на такой урок</a>
+        </div>
+      </div>
+
+      <!-- Игра: меняешь числа в коде — меняется игра -->
+      <div class="lab-pane" id="lab-p-game" role="tabpanel" aria-labelledby="lab-t-game" style="--accent: var(--felt)" hidden>
+        <div class="lab-ed">
+          <p class="lab-top"><i></i><i></i><i></i><span>game.luau</span></p>
+          <div class="lab-code lab-code--params">
+            <label class="lab-param"><span class="lab-line"><span class="ln">1</span><span><span class="k-k">local</span> jump = <output class="k-n" id="g-jump-o" for="g-jump">12</output>  <span class="k-c">-- прыжок</span></span></span><input id="g-jump" type="range" min="5" max="18" step="0.5" value="12" aria-label="Сила прыжка"></label>
+            <label class="lab-param"><span class="lab-line"><span class="ln">2</span><span><span class="k-k">local</span> gravity = <output class="k-n" id="g-gravity-o" for="g-gravity">0.6</output>  <span class="k-c">-- тяжесть</span></span></span><input id="g-gravity" type="range" min="0.3" max="1.2" step="0.05" value="0.6" aria-label="Сила тяжести"></label>
+            <label class="lab-param"><span class="lab-line"><span class="ln">3</span><span><span class="k-k">local</span> speed = <output class="k-n" id="g-speed-o" for="g-speed">5</output>  <span class="k-c">-- скорость</span></span></span><input id="g-speed" type="range" min="3" max="9" step="0.5" value="5" aria-label="Скорость"></label>
+          </div>
+          <p class="lab-hint">Это Luau — язык Roblox Studio. Пунктир показывает, как прыгнет герой.</p>
+        </div>
+        <div class="lab-out lab-stage lab-game" id="g-stage">
+          <canvas id="g-cv" role="img" aria-label="Мини-игра: герой бежит по степи и прыгает через препятствия"></canvas>
+          <p class="gm-hud" aria-hidden="true"><span>ОЧКИ <b id="g-score">0</b></span><span>РЕКОРД <b id="g-best">0</b></span></p>
+          <button type="button" class="gm-start" id="g-start"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><span id="g-start-t">Играть</span></button>
+          <p class="gm-tip" id="g-tip">Пробел или клик — прыжок</p>
+        </div>
+        <div class="lab-foot">
+          <p class="lab-task" id="game-task"><b>Задание</b><span>Настрой прыжок и скорость и набери 5 очков.</span></p>
+          <a class="btn btn-gold" href="#join" data-pick="Создание игр">Хочу на такой урок</a>
+        </div>
       </div>
     </div>
   </div>
 </section>
+<!-- ===== Мини-уроки: конец ===== -->
 
 <section class="yurt" id="yurt" aria-labelledby="yurt-title">
   <div class="yr-stage">
@@ -1150,6 +1327,7 @@ h1, h2, h3 { text-wrap: balance; }
     </a>
     <ul class="foot-links">
       <li><a href="#directions">Направления</a></li>
+      <li><a href="#try">Мини-уроки</a></li>
       <li><a href="#yurt">3D-юрта</a></li>
       <li><a href="#join">Бесплатный урок</a></li>
       <li><a href="https://wa.me/77055823688">WhatsApp: +7 705 582 36 88</a></li>
@@ -1363,20 +1541,6 @@ h1, h2, h3 { text-wrap: balance; }
     });
   } else document.querySelectorAll('.live-open').forEach(b => b.addEventListener('click', () => window.open(b.dataset.open, '_blank', 'noopener')));
 
-  // Мини-консоль: программа «выполняется» на каждом нажатии клавиши
-  const tcIn = document.getElementById('tc-name'), tcOut = document.getElementById('tc-out');
-  if (tcIn && tcOut) {
-    const esc = t => t.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-    const run = () => {
-      const n = tcIn.value.trim();
-      tcIn.style.width = Math.max(9, [...tcIn.value].length + 1) + 'ch';
-      if (!n) { tcOut.innerHTML = '<span style="opacity:.55">Сәлем, !\nБукв: 0\n</span>'; return; }
-      tcOut.innerHTML = `Сәлем, <b>${esc(n)}</b>!\nБукв: <b>${[...n].length}</b>\n<b>${esc([...n].reverse().join(''))}</b>`;
-    };
-    tcIn.addEventListener('input', run);
-    run();
-  }
-
   // Часы: навёл или нажал — разбираются и держатся разобранными, отпустил — снова сами по кругу
   const codeVis = document.querySelector('.dir[data-id="code"] .dir-visual--live');
   const codeFrame = codeVis && codeVis.querySelector('.live-frame');
@@ -1536,7 +1700,8 @@ h1, h2, h3 { text-wrap: balance; }
       es.forEach(e => (e.isIntersecting ? near.add(e.target) : near.delete(e.target)));
       fab.classList.toggle('is-away', near.size > 0);
     }, { threshold: 0.25 });
-    ['.hero', '#join'].forEach(sel => { const el = document.querySelector(sel); if (el) io.observe(el); });
+    // …и над мини-уроками: там свои кнопки, а плавающая закрывала бы ползунки на телефоне
+    ['.hero', '.lab-box', '#join'].forEach(sel => { const el = document.querySelector(sel); if (el) io.observe(el); });
   })();
 
   // ---------- Боковые ленты с орнаментом ----------
@@ -1735,6 +1900,542 @@ h1, h2, h3 { text-wrap: balance; }
     ScrollTrigger.refresh();
   };
   armEvents.forEach(ev => addEventListener(ev, arm, { passive: true }));
+})();
+</script>
+
+<script>
+// ===== Мини-уроки: бот, парабола и игра =====
+// Без библиотек. Каждая сцена рисуется, только пока её вкладка открыта и видна на экране.
+(() => {
+  const lab = document.getElementById('try');
+  if (!lab) return;
+  const $ = id => document.getElementById(id);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const cssVar = (name, fallback) => getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback;
+  const COL = {
+    gold: cssVar('--gold', '#e8b64a'), goldSoft: cssVar('--gold-soft', '#f4d48a'), sky: cssVar('--sky', '#3cc6dc'),
+    felt: cssVar('--felt', '#e65f43'), milk: cssVar('--milk', '#f4ecdf'), night: cssVar('--night', '#0a1430'), night3: cssVar('--night-3', '#172856')
+  };
+  const rgba = (hex, a) => { const n = parseInt(hex.slice(1), 16); return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`; };
+  const dprOf = () => Math.min(window.devicePixelRatio || 1, 2);
+  // Холст под размер блока; возвращает false, пока блок скрыт
+  const fitCanvas = (cv, box) => {
+    const w = box.clientWidth, h = box.clientHeight, d = dprOf();
+    if (!w || !h) return null;
+    if (cv.width !== Math.round(w * d) || cv.height !== Math.round(h * d)) { cv.width = Math.round(w * d); cv.height = Math.round(h * d); }
+    return { w, h, d };
+  };
+  // Задание выполнено: подпись меняется на «Готово» и объясняет, что будет на уроке
+  const done = (id, text) => {
+    const el = $(id);
+    if (!el) return;
+    el.classList.add('is-done');
+    el.querySelector('b').textContent = 'Готово';
+    el.querySelector('span').textContent = text;
+  };
+  const hint = (id, text) => { const el = $(id); if (el && !el.classList.contains('is-done')) el.querySelector('span').textContent = text; };
+
+  // ---------- Вкладки ----------
+  const tabs = [...lab.querySelectorAll('[role="tab"]')];
+  const panes = tabs.map(t => $(t.getAttribute('aria-controls')));
+  const hooks = {}; // id панели → { show, hide }
+  const select = (i, focus) => {
+    tabs.forEach((t, k) => {
+      const on = k === i;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      if (!on && !panes[k].hidden && hooks[panes[k].id]) hooks[panes[k].id].hide();
+      panes[k].hidden = !on;
+    });
+    if (focus) tabs[i].focus();
+    if (hooks[panes[i].id]) hooks[panes[i].id].show();
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(i));
+    t.addEventListener('keydown', e => {
+      const to = e.key === 'ArrowRight' ? i + 1 : e.key === 'ArrowLeft' ? i - 1 : e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : null;
+      if (to === null) return;
+      e.preventDefault();
+      select((to + tabs.length) % tabs.length, true);
+    });
+  });
+
+  // ---------- Код: чат-бот ----------
+  (() => {
+    const nameIn = $('bot-name'), helloIn = $('bot-hello'), log = $('chat-log'), form = $('chat-form'), input = $('chat-in');
+    if (!nameIn || !helloIn || !log || !form) return;
+    const fitInput = el => { el.style.width = Math.max(4, [...el.value].length + 1) + 'ch'; };
+    const botName = () => nameIn.value.trim() || 'Бот';
+    const syncName = () => {
+      fitInput(nameIn);
+      $('chat-name').textContent = botName();
+      $('chat-ava').textContent = [...botName()][0].toUpperCase();
+    };
+    let edited = false;
+    nameIn.addEventListener('input', syncName);
+    helloIn.addEventListener('input', () => { fitInput(helloIn); edited = true; });
+    syncName();
+    fitInput(helloIn);
+
+    const say = (text, mine) => {
+      const p = document.createElement('p');
+      p.className = 'chat-msg ' + (mine ? 'is-me' : 'is-bot');
+      p.textContent = text;
+      log.appendChild(p);
+      while (log.children.length > 40) log.firstElementChild.remove();
+      log.scrollTop = log.scrollHeight;
+    };
+
+    // Пример считается своим разбором, без eval: числа, скобки, + − × ÷.
+    // Возвращает { text, value } или null, если в сообщении нет примера.
+    const calc = msg => {
+      const m = msg.match(/[\d(][\d\s.,+\-*/×÷:()xх·−–]*[\d)]/i);
+      if (!m) return null;
+      const s = m[0].replace(/\s+/g, '').replace(/[×xх·]/gi, '*').replace(/[÷:]/g, '/').replace(/[−–]/g, '-').replace(/,/g, '.');
+      if (!/[+\-*/]/.test(s.slice(1))) return null;
+      let i = 0;
+      const num = () => {
+        const from = i;
+        while (i < s.length && /[\d.]/.test(s[i])) i++;
+        const v = Number(s.slice(from, i));
+        if (from === i || Number.isNaN(v)) throw new Error('число');
+        return v;
+      };
+      const atom = () => {
+        if (s[i] === '(') { i++; const v = sum(); if (s[i] !== ')') throw new Error('скобка'); i++; return v; }
+        if (s[i] === '-') { i++; return -atom(); }
+        if (s[i] === '+') { i++; return atom(); }
+        return num();
+      };
+      const mul = () => { let v = atom(); while (s[i] === '*' || s[i] === '/') { const op = s[i++], r = atom(); v = op === '*' ? v * r : v / r; } return v; };
+      const sum = () => { let v = mul(); while (s[i] === '+' || s[i] === '-') { const op = s[i++], r = mul(); v = op === '+' ? v + r : v - r; } return v; };
+      try {
+        const value = sum();
+        if (i !== s.length) return null;
+        const text = s.replace(/\./g, ',').replace(/\*/g, ' × ').replace(/\//g, ' ÷ ').replace(/\+/g, ' + ').replace(/([\d)])-/g, '$1 − ').replace(/-/g, '−');
+        return { text, value };
+      } catch (_) { return null; }
+    };
+    const fmt = v => (Math.round(v * 1e6) / 1e6).toLocaleString('ru-RU', { maximumFractionDigits: 6 }).replace('-', '−');
+
+    let solved = false;
+    const answer = msg => {
+      const t = msg.toLowerCase();
+      if (/привет|сәлем|салем|салам|здравств|добрый|hello|хай/.test(t)) return { text: helloIn.value.trim() || 'Сәлем!', greeting: true };
+      const c = calc(msg);
+      if (c) return { text: Number.isFinite(c.value) ? `${c.text} = ${fmt(c.value)}` : 'На ноль делить нельзя' };
+      return { text: 'Я пока учусь: умею здороваться и считать. На уроке научишь меня большему' };
+    };
+    const send = raw => {
+      const msg = raw.trim().slice(0, 60);
+      if (!msg) return;
+      say(msg, true);
+      const { text, greeting: isGreeting } = answer(msg);
+      const typing = document.createElement('p');
+      typing.className = 'chat-msg is-bot is-typing';
+      typing.setAttribute('aria-hidden', 'true');
+      typing.innerHTML = '<i></i><i></i><i></i>';
+      log.appendChild(typing);
+      log.scrollTop = log.scrollHeight;
+      setTimeout(() => {
+        typing.remove();
+        say(text, false);
+        if (solved) return;
+        if (isGreeting && edited) { solved = true; done('code-task', 'Бот отвечает твоими словами. На уроках подключим его к Telegram и к нейросети.'); }
+        else if (isGreeting) hint('code-task', 'Бот ответил. Теперь измени приветствие во второй строке кода и напиши «привет» ещё раз.');
+      }, reduce ? 0 : 520);
+    };
+    form.addEventListener('submit', e => { e.preventDefault(); send(input.value); input.value = ''; });
+    $('chat-chips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) send(b.textContent); });
+    say('Напиши мне «привет» или пример: 2 + 2 * 2', false);
+  })();
+
+  // ---------- Математика: парабола через звёзды ----------
+  (() => {
+    const cv = $('m-cv'), A = $('m-a'), Pm = $('m-p'), Q = $('m-q');
+    if (!cv || !A || !Pm || !Q) return;
+    const g = cv.getContext('2d'), box = cv.parentElement, next = $('m-next'), badge = $('m-level');
+    // Звёзды подобраны так, чтобы ответ попадал на деления ползунков
+    const LEVELS = [
+      [[-1, 2], [3, 2]],
+      [[-2, -1], [0, 3], [2, -1]],
+      [[-3, -2], [-1, -4], [1, -2]]
+    ];
+    let level = 0, solved = false, everSolved = false, pulse = 0, raf = 0;
+    const num = v => String(Math.round(v * 100) / 100).replace('-', '−').replace('.', ',');
+    const val = () => ({ a: +A.value, p: +Pm.value, q: +Q.value });
+    const f = (x, v) => v.a * (x - v.p) * (x - v.p) + v.q;
+    const formula = v => {
+      if (v.a === 0) return 'y = ' + num(v.q);
+      const head = v.a === 1 ? '' : v.a === -1 ? '−' : num(v.a) + '·';
+      const core = v.p === 0 ? 'x²' : `(x ${v.p > 0 ? '−' : '+'} ${num(Math.abs(v.p))})²`;
+      const tail = v.q === 0 ? '' : ` ${v.q > 0 ? '+' : '−'} ${num(Math.abs(v.q))}`;
+      return `y = ${head}${core}${tail}`;
+    };
+    const hits = v => LEVELS[level].map(([x, y]) => Math.abs(f(x, v) - y) < 0.13);
+
+    const star = (x, y, r, lit) => {
+      g.save();
+      g.translate(x, y);
+      g.beginPath();
+      for (let i = 0; i < 8; i++) { const a = (i / 8) * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? r * 0.42 : r; g.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); }
+      g.closePath();
+      if (lit) { g.shadowColor = COL.gold; g.shadowBlur = 16; g.fillStyle = COL.goldSoft; g.fill(); }
+      else { g.fillStyle = rgba(COL.night, 0.9); g.fill(); g.lineWidth = 1.6; g.strokeStyle = rgba(COL.gold, 0.85); g.stroke(); }
+      g.restore();
+    };
+    const draw = () => {
+      const s = fitCanvas(cv, box);
+      if (!s) return;
+      const { w: W, h: H } = s, v = val();
+      g.setTransform(s.d, 0, 0, s.d, 0, 0);
+      g.clearRect(0, 0, W, H);
+      const u = Math.min(H / 11, W / 11.5), ox = W / 2, oy = H / 2 + u * 0.5;
+      const X = x => ox + x * u, Y = y => oy - y * u;
+      // сетка и оси
+      g.lineWidth = 1;
+      g.strokeStyle = rgba(COL.milk, 0.07);
+      g.beginPath();
+      for (let x = Math.ceil(-ox / u); x * u + ox <= W; x++) { g.moveTo(Math.round(X(x)) + 0.5, 0); g.lineTo(Math.round(X(x)) + 0.5, H); }
+      for (let y = Math.ceil(-(H - oy) / u); oy - y * u >= 0; y++) { g.moveTo(0, Math.round(Y(y)) + 0.5); g.lineTo(W, Math.round(Y(y)) + 0.5); }
+      g.stroke();
+      g.strokeStyle = rgba(COL.milk, 0.34);
+      g.beginPath();
+      g.moveTo(0, Math.round(oy) + 0.5); g.lineTo(W, Math.round(oy) + 0.5);
+      g.moveTo(Math.round(ox) + 0.5, 0); g.lineTo(Math.round(ox) + 0.5, H);
+      g.stroke();
+      g.fillStyle = rgba(COL.milk, 0.45);
+      g.font = '500 11px ui-monospace, Menlo, Consolas, monospace';
+      g.textAlign = 'center'; g.textBaseline = 'top';
+      [-4, -2, 2, 4].forEach(n => g.fillText(String(n).replace('-', '−'), X(n), oy + 5));
+      g.textAlign = 'right'; g.textBaseline = 'middle';
+      [-4, -2, 2, 4].forEach(n => g.fillText(String(n).replace('-', '−'), ox - 6, Y(n)));
+      g.fillText('x', W - 8, oy - 10);
+      g.textAlign = 'left';
+      g.fillText('y', ox + 8, 10);
+      // парабола
+      const hit = hits(v), all = hit.every(Boolean);
+      g.save();
+      g.lineWidth = 2.6; g.lineJoin = 'round';
+      g.strokeStyle = all ? COL.goldSoft : COL.sky;
+      g.shadowColor = all ? COL.gold : COL.sky;
+      g.shadowBlur = all ? 14 + pulse * 10 : 8;
+      g.beginPath();
+      let pen = false;
+      for (let px = -2; px <= W + 2; px += 2) {
+        const y = Y(f((px - ox) / u, v));
+        if (y < -40 || y > H + 40) { pen = false; continue; }
+        if (pen) g.lineTo(px, y); else { g.moveTo(px, y); pen = true; }
+      }
+      g.stroke();
+      g.restore();
+      // вершина
+      if (v.a !== 0) {
+        g.fillStyle = all ? COL.goldSoft : COL.sky;
+        g.beginPath(); g.arc(X(v.p), Y(v.q), 4, 0, Math.PI * 2); g.fill();
+      }
+      // звёзды
+      LEVELS[level].forEach(([x, y], i) => star(X(x), Y(y), (hit[i] ? 11 : 9) * (1 + (hit[i] ? pulse * 0.25 : 0)), hit[i]));
+      return all;
+    };
+    const update = () => {
+      const v = val();
+      $('m-a-o').textContent = num(v.a); $('m-p-o').textContent = num(v.p); $('m-q-o').textContent = num(v.q);
+      $('m-main').textContent = formula(v);
+      $('m-exp').textContent = v.a === 0 ? 'при a = 0 это уже прямая' : `вершина в точке (${num(v.p)}; ${num(v.q)})`;
+      const all = draw();
+      if (all && !solved) {
+        solved = true; everSolved = true;
+        badge.textContent = `Задача ${level + 1} из ${LEVELS.length}: решена`;
+        done('math-task', `Решено: ${formula(v)}. Так на уроках формула превращается в картинку.`);
+        next.hidden = false;
+        if (!reduce) {
+          const t0 = performance.now();
+          cancelAnimationFrame(raf);
+          const tick = now => { const k = (now - t0) / 700; pulse = k >= 1 ? 0 : Math.sin(k * Math.PI); draw(); if (k < 1) raf = requestAnimationFrame(tick); };
+          raf = requestAnimationFrame(tick);
+        }
+      }
+    };
+    [A, Pm, Q].forEach(el => el.addEventListener('input', update));
+    next.addEventListener('click', () => {
+      level = (level + 1) % LEVELS.length;
+      solved = false;
+      A.value = 1; Pm.value = 0; Q.value = 0;
+      badge.textContent = `Задача ${level + 1} из ${LEVELS.length}`;
+      next.hidden = true;
+      const el = $('math-task');
+      el.classList.remove('is-done');
+      el.querySelector('b').textContent = 'Задание';
+      el.querySelector('span').textContent = LEVELS[level].length > 2 ? 'Теперь звёзд три: через них проходит только одна парабола.' : 'Двигай ползунки, чтобы парабола прошла через все звёзды.';
+      update();
+      A.focus();
+    });
+    hooks['lab-p-math'] = { show: update, hide: () => cancelAnimationFrame(raf) };
+    if ('ResizeObserver' in window) new ResizeObserver(() => { if (!cv.closest('[hidden]')) draw(); }).observe(box);
+    update();
+  })();
+
+  // ---------- Игра: раннер, который настраивается числами в коде ----------
+  (() => {
+    const cv = $('g-cv'), stage = $('g-stage');
+    if (!cv || !stage) return;
+    const g = cv.getContext('2d');
+    const ctl = { jump: $('g-jump'), gravity: $('g-gravity'), speed: $('g-speed') };
+    const out = { jump: $('g-jump-o'), gravity: $('g-gravity-o'), speed: $('g-speed-o') };
+    const startBtn = $('g-start'), startText = $('g-start-t'), tip = $('g-tip'), scoreEl = $('g-score'), bestEl = $('g-best');
+    const P = { jump: +ctl.jump.value, gravity: +ctl.gravity.value, speed: +ctl.speed.value };
+    const GROUND = 34, SIZE = 24, GOAL = 5, STEP = 1 / 60;
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const HOW = matchMedia('(hover: none), (pointer: coarse)').matches ? 'Нажимай на поле — герой прыгает' : 'Пробел или клик — прыжок';
+    tip.textContent = HOW;
+    let W = 0, H = 0, D = 1, state = 'idle', onScreen = false, won = false, byKey = false;
+    let hero = { z: 0, vz: 0, rot: 0, squash: 0, air: false }, obs = [], coins = [], parts = [];
+    let score = 0, best = 0, dist = 0, nextObs = 0, buffer = 0, shake = 0, last = 0, acc = 0, raf = 0;
+    // звёзды неба в долях холста: не прыгают при изменении размера
+    const sky = Array.from({ length: 46 }, () => ({ x: Math.random(), y: Math.random() * 0.7, r: rnd(0.5, 1.4), a: rnd(0.25, 0.8) }));
+    const heroX = () => Math.max(44, W * 0.2);
+    const airFrames = () => (2 * P.jump) / P.gravity;
+    const apex = () => (P.jump * P.jump) / (2 * P.gravity);
+
+    const puff = (x, z, n, color) => {
+      if (reduce) return;
+      for (let i = 0; i < n; i++) parts.push({ x, z, vx: rnd(-2.2, 2.2), vz: rnd(0.5, 3.6), life: 1, size: rnd(2, 4.5), color });
+    };
+    const add = n => {
+      score += n;
+      scoreEl.textContent = score;
+      if (score > best) { best = score; bestEl.textContent = best; }
+      if (score >= GOAL && !won) { won = true; done('game-task', `${GOAL} очков! На уроках соберём такую игру в Roblox Studio или Godot — уже с твоими уровнями.`); }
+    };
+    const reset = () => {
+      hero = { z: 0, vz: 0, rot: 0, squash: 0, air: false };
+      obs = []; coins = []; parts = [];
+      score = 0; dist = 0; nextObs = 260; buffer = 0; shake = 0;
+      scoreEl.textContent = '0';
+    };
+    const hop = () => {
+      if (hero.air) { buffer = 7; return; }
+      hero.vz = P.jump; hero.z = 0.01; hero.air = true; hero.squash = -0.5;
+      puff(heroX() + SIZE / 2, 0, 5, COL.goldSoft);
+    };
+    const spawn = () => {
+      const gap = Math.max(210, airFrames() * P.speed * rnd(1.15, 1.9) + 60);
+      obs.push({ x: W + 30, w: rnd(16, 24), h: rnd(20, 40), done: false });
+      // монета посередине следующего промежутка: её можно взять только в прыжке
+      if (Math.random() < 0.6) coins.push({ x: W + 30 + gap / 2, z: Math.min(84, Math.max(38, apex() * 0.7)), t: Math.random() * 6 });
+      nextObs = dist + gap;
+    };
+    const crash = o => {
+      state = 'over';
+      shake = reduce ? 0 : 9;
+      puff(heroX() + SIZE / 2, hero.z + SIZE / 2, 18, COL.felt);
+      stage.classList.remove('is-run');
+      tip.textContent = apex() < o.h + 4 ? 'Прыжок ниже препятствия: увеличь jump или уменьши gravity' : 'Бум! Поменяй числа в коде и попробуй ещё';
+      startText.textContent = 'Ещё раз';
+      startBtn.hidden = false;
+      // играли с клавиатуры — фокус на кнопку: следующий пробел перезапустит игру, а не прокрутит страницу
+      if (byKey) startBtn.focus({ preventScroll: true });
+    };
+    const stepParts = () => {
+      for (const p of parts) { p.x += p.vx; p.z += p.vz; p.vz -= 0.22; p.life -= 0.035; }
+      parts = parts.filter(p => p.life > 0);
+      shake *= 0.86;
+    };
+    const step = () => {
+      if (buffer > 0) buffer--;
+      if (hero.air) {
+        hero.vz -= P.gravity;
+        hero.z += hero.vz;
+        hero.rot += Math.PI / Math.max(8, airFrames());
+        if (hero.z <= 0) {
+          hero.z = 0; hero.vz = 0; hero.air = false; hero.squash = 1;
+          hero.rot = Math.round(hero.rot / (Math.PI / 2)) * (Math.PI / 2);
+          puff(heroX() + SIZE / 2, 0, 4, COL.gold);
+          if (buffer > 0) { buffer = 0; hop(); }
+        }
+      }
+      hero.squash *= 0.8;
+      dist += P.speed;
+      if (dist >= nextObs) spawn();
+      const hx = heroX();
+      for (const o of obs) {
+        o.x -= P.speed;
+        if (!o.done && o.x + o.w < hx) { o.done = true; add(1); }
+        if (o.x < hx + SIZE - 4 && o.x + o.w > hx + 4 && hero.z < o.h - 3) { crash(o); return; }
+      }
+      obs = obs.filter(o => o.x + o.w > -10);
+      for (const c of coins) {
+        c.x -= P.speed; c.t += 0.12;
+        if (Math.abs(c.x - (hx + SIZE / 2)) < 17 && c.z > hero.z - 9 && c.z < hero.z + SIZE + 9) { c.got = true; add(1); puff(c.x, c.z, 9, COL.goldSoft); }
+      }
+      coins = coins.filter(c => !c.got && c.x > -20);
+      stepParts();
+    };
+
+    const yurt = (x, gy, s) => {
+      // силуэт юрты на горизонте
+      const w = 74 * s, wall = 15 * s, dome = 24 * s;
+      g.beginPath();
+      g.moveTo(x - w / 2, gy); g.lineTo(x - w / 2, gy - wall);
+      g.quadraticCurveTo(x - w * 0.36, gy - wall - dome, x - w * 0.07, gy - wall - dome - 3 * s);
+      g.lineTo(x + w * 0.07, gy - wall - dome - 3 * s);
+      g.quadraticCurveTo(x + w * 0.36, gy - wall - dome, x + w / 2, gy - wall);
+      g.lineTo(x + w / 2, gy); g.closePath(); g.fill();
+    };
+    const draw = () => {
+      const s = fitCanvas(cv, stage);
+      if (!s) return;
+      W = s.w; H = s.h; D = s.d;
+      g.setTransform(D, 0, 0, D, 0, 0);
+      g.clearRect(0, 0, W, H);
+      g.save();
+      if (shake > 0.5) g.translate(rnd(-shake, shake) * 0.5, rnd(-shake, shake) * 0.5);
+      const gy = H - GROUND, hx = heroX();
+      // небо: звёзды и шаңырақ вместо луны
+      for (const st of sky) { g.fillStyle = rgba(COL.milk, st.a); g.beginPath(); g.arc(st.x * W, st.y * gy, st.r, 0, Math.PI * 2); g.fill(); }
+      const mx = W - Math.min(76, W * 0.2), my = Math.min(70, gy * 0.34), mr = Math.min(30, gy * 0.15);
+      const glow = g.createRadialGradient(mx, my, 0, mx, my, mr * 3);
+      glow.addColorStop(0, rgba(COL.gold, 0.26)); glow.addColorStop(1, rgba(COL.gold, 0));
+      g.fillStyle = glow; g.fillRect(mx - mr * 3, my - mr * 3, mr * 6, mr * 6);
+      g.strokeStyle = rgba(COL.gold, 0.7); g.lineWidth = 2.4;
+      g.beginPath(); g.arc(mx, my, mr, 0, Math.PI * 2); g.stroke();
+      g.strokeStyle = rgba(COL.gold, 0.4); g.lineWidth = 1.6;
+      g.beginPath();
+      for (const k of [-0.36, 0.36]) {
+        g.moveTo(mx - mr * 0.93, my + mr * k); g.quadraticCurveTo(mx, my + mr * (k - 0.22), mx + mr * 0.93, my + mr * k);
+        g.moveTo(mx + mr * k, my - mr * 0.93); g.quadraticCurveTo(mx + mr * (k - 0.22), my, mx + mr * k, my + mr * 0.93);
+      }
+      g.stroke();
+      // далёкие юрты едут медленнее земли
+      g.fillStyle = '#12204a';
+      const period = 320, shift = (dist * 0.22) % period;
+      for (let x = -period; x < W + period; x += period) { yurt(x + 90 - shift, gy, 1); yurt(x + 236 - shift, gy, 0.66); }
+      // земля с орнаментом
+      g.fillStyle = COL.night3; g.fillRect(0, gy, W, GROUND);
+      g.fillStyle = COL.gold; g.fillRect(0, gy, W, 2);
+      g.fillStyle = rgba(COL.gold, 0.5);
+      const off = dist % 30;
+      for (let x = -off; x < W + 30; x += 30) { g.save(); g.translate(x + 15, gy + 17); g.rotate(Math.PI / 4); g.fillRect(-3.5, -3.5, 7, 7); g.restore(); }
+      // пунктир: как далеко и высоко прыгнет герой с такими числами
+      if (state !== 'run') {
+        g.fillStyle = rgba(COL.milk, 0.6);
+        const n = Math.ceil(airFrames());
+        for (let k = 0; k <= n; k += 2) {
+          const z = Math.max(0, k * P.jump - (P.gravity * k * (k + 1)) / 2), x = hx + SIZE / 2 + P.speed * k;
+          if (x > W) break;
+          g.beginPath(); g.arc(x, gy - z - SIZE / 2, 1.7, 0, Math.PI * 2); g.fill();
+        }
+      }
+      // препятствия
+      for (const o of obs) {
+        const top = gy - o.h, cap = o.w * 0.48;
+        g.fillStyle = COL.felt;
+        g.beginPath(); g.moveTo(o.x, gy); g.lineTo(o.x, top + cap); g.lineTo(o.x + o.w / 2, top); g.lineTo(o.x + o.w, top + cap); g.lineTo(o.x + o.w, gy); g.closePath(); g.fill();
+        g.fillStyle = 'rgba(255,255,255,0.2)';
+        g.beginPath(); g.moveTo(o.x, gy); g.lineTo(o.x, top + cap); g.lineTo(o.x + o.w / 2, top); g.lineTo(o.x + o.w / 2, gy); g.closePath(); g.fill();
+      }
+      // монеты крутятся
+      for (const c of coins) {
+        const k = Math.abs(Math.cos(c.t));
+        g.save(); g.translate(c.x, gy - c.z); g.scale(0.25 + 0.75 * k, 1); g.rotate(Math.PI / 4);
+        g.fillStyle = COL.gold; g.fillRect(-6, -6, 12, 12);
+        g.fillStyle = COL.goldSoft; g.fillRect(-3, -3, 6, 6);
+        g.restore();
+      }
+      // герой: тень, квадрат с глазом, сжимается при приземлении
+      if (state !== 'over') {
+        const k = Math.max(0.25, 1 - hero.z / 150);
+        g.fillStyle = `rgba(0,0,0,${0.32 * k})`;
+        g.beginPath(); g.ellipse(hx + SIZE / 2, gy + 3, (SIZE / 2 + 2) * k, 3.2 * k, 0, 0, Math.PI * 2); g.fill();
+        g.save();
+        g.translate(hx + SIZE / 2, gy - hero.z - SIZE / 2 + hero.squash * 3);
+        g.rotate(hero.rot);
+        g.scale(1 + hero.squash * 0.2, 1 - hero.squash * 0.24);
+        g.fillStyle = COL.milk;
+        g.beginPath();
+        if (g.roundRect) g.roundRect(-SIZE / 2, -SIZE / 2, SIZE, SIZE, 5); else g.rect(-SIZE / 2, -SIZE / 2, SIZE, SIZE);
+        g.fill();
+        g.lineWidth = 1.5; g.strokeStyle = COL.gold; g.stroke();
+        g.fillStyle = COL.night; g.fillRect(3, -6, 5, 5);
+        g.restore();
+      }
+      // частицы
+      for (const p of parts) { g.fillStyle = rgba(p.color, Math.max(0, p.life)); g.fillRect(p.x - p.size / 2, gy - p.z - p.size / 2, p.size, p.size); }
+      g.restore();
+    };
+
+    const frame = now => {
+      const dt = Math.min(0.1, (now - last) / 1000);
+      last = now;
+      if (state === 'run') { acc += dt; while (acc >= STEP && state === 'run') { step(); acc -= STEP; } }
+      else stepParts();
+      draw();
+      if (state === 'run' || parts.length || shake > 0.5) raf = requestAnimationFrame(frame);
+    };
+    const run = () => { cancelAnimationFrame(raf); last = performance.now(); acc = 0; raf = requestAnimationFrame(frame); };
+    const start = () => {
+      reset();
+      state = 'run';
+      stage.classList.add('is-run');
+      startBtn.hidden = true;
+      run();
+    };
+    // Игра не идёт сама по себе: уходит с экрана или со вкладки — ждёт кнопку «Играть»
+    const stop = () => {
+      if (state !== 'run') return;
+      cancelAnimationFrame(raf);
+      state = 'idle';
+      stage.classList.remove('is-run');
+      tip.textContent = HOW;
+      startText.textContent = 'Играть';
+      startBtn.hidden = false;
+      reset();
+      draw();
+    };
+
+    startBtn.addEventListener('click', start);
+    cv.addEventListener('pointerdown', e => { if (e.button > 0) return; byKey = false; if (state === 'run') hop(); });
+    addEventListener('keydown', e => {
+      if (state !== 'run' || (e.code !== 'Space' && e.code !== 'ArrowUp')) return;
+      if (e.target instanceof Element && e.target.closest('input, textarea, select, button, a, [role="tab"]')) return;
+      e.preventDefault();
+      byKey = true;
+      hop();
+    });
+    Object.keys(ctl).forEach(k => ctl[k].addEventListener('input', () => {
+      P[k] = +ctl[k].value;
+      out[k].textContent = String(P[k]);
+      if (state !== 'run') draw();
+    }));
+    if ('IntersectionObserver' in window) new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; if (!onScreen) stop(); }).observe(stage);
+    document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); });
+    if ('ResizeObserver' in window) new ResizeObserver(() => { if (!cv.closest('[hidden]') && state !== 'run') draw(); }).observe(stage);
+    hooks['lab-p-game'] = { show: draw, hide: stop };
+    reset();
+  })();
+
+  // Высота блока меняется (другая вкладка, появилось «Готово») — анимации прокрутки ниже
+  // должны пересчитать свои позиции, иначе закреплённая юрта встанет не на своё место
+  const box = lab.querySelector('.lab-box');
+  if (box && 'ResizeObserver' in window) {
+    let lastH = box.offsetHeight, timer = 0;
+    new ResizeObserver(() => {
+      const h = box.offsetHeight;
+      if (Math.abs(h - lastH) < 2) return;
+      lastH = h;
+      clearTimeout(timer);
+      timer = setTimeout(() => { if (window.ScrollTrigger) window.ScrollTrigger.refresh(); }, 120);
+    }).observe(box);
+  }
+
+  // ---------- Кнопки «Хочу на такой урок»: направление сразу подставляется в форму записи ----------
+  document.querySelectorAll('[data-pick]').forEach(a => a.addEventListener('click', () => {
+    const sel = $('f-dir'), form = $('join-form'), ready = $('join-done');
+    if (!sel) return;
+    if (ready && form && !ready.hidden) { ready.hidden = true; form.hidden = false; }
+    sel.value = a.dataset.pick;
+  }));
 })();
 </script>
 
